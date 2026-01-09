@@ -1,7 +1,8 @@
-package cloud.norgha.multi_tenant_saas_starter_template.modules.users;
+package cloud.norgha.multi_tenant_saas_starter_template.modules.users.entity;
 
 import cloud.norgha.multi_tenant_saas_starter_template.multitenancy.persistence.BaseTenantEntity;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.ParamDef;
@@ -20,6 +21,7 @@ public class User extends BaseTenantEntity {
     private UUID id;
 
 
+    @NotNull(message = "Email is required!")
     @Column(nullable = false)
     private String email;
 
