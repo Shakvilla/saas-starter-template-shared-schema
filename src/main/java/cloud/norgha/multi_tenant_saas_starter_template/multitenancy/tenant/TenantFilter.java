@@ -11,6 +11,7 @@ import java.io.IOException;
 
 public class TenantFilter extends OncePerRequestFilter {
 
+
     private final TenantResolver tenantResolver = new TenantResolver();
 
     private final HibernateTenantFilterConfigurer filterConfigurer;
