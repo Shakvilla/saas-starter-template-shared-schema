@@ -16,7 +16,7 @@ public class JwtTokenService {
     private final long expirationSeconds;
 
 
-    public JwtTokenService(String secretKey, long expirationSeconds) {
+    public JwtTokenService(SecretKey secretKey, long expirationSeconds) {
         this.secretKey = secretKey;
         this.expirationSeconds = expirationSeconds;
     }
@@ -43,5 +43,14 @@ public class JwtTokenService {
                 .build()
                 .parseSignedClaims(token);
 
+    }
+
+    /**
+     * Returns the token expiration time in seconds.
+     *
+     * @return Expiration duration in seconds
+     */
+    public long getExpirationSeconds() {
+        return expirationSeconds;
     }
 }

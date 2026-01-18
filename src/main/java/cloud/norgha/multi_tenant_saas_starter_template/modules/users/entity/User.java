@@ -1,21 +1,29 @@
 package cloud.norgha.multi_tenant_saas_starter_template.modules.users.entity;
 
 import cloud.norgha.multi_tenant_saas_starter_template.multitenancy.persistence.BaseTenantEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.ParamDef;
-import org.jspecify.annotations.Nullable;
 
 import java.time.Instant;
 import java.util.UUID;
 
-
+/**
+ * User entity representing a tenant user.
+ * Extends BaseTenantEntity which handles tenant_id assignment via @PrePersist.
+ * 
+ * Future: Will support tenant-managed roles and permissions.
+ */
 @Entity
-@Table(name ="users")
+@Table(name = "users")
 @FilterDef(name = "tenantFilter", parameters = @ParamDef(name = "tenantId", type = String.class))
 @Filter(name = "tenantFilter", condition = "tenant_id = :tenantId")
 public class User extends BaseTenantEntity {
@@ -24,50 +32,51 @@ public class User extends BaseTenantEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(nullable = false)
-    private String tenantId;
-
-    @NotNull(message = "Email is required!")
+    @NotBlank(message = "Email is required")
+    @Email(message = "Email format is invalid")
     @Column(nullable = false)
     private String email;
 
     @Column(name = "password_hash", nullable = false)
-    private String passwordHarsh;
-
+    private String passwordHash;
 
     @Column(nullable = false)
     private String role;
 
-    @Column(nullable = false)
+    @NotBlank(message = "Full name is required")
+    @Column(name = "full_name", nullable = false)
     private String fullName;
 
     @Column(nullable = false)
     private boolean active;
 
-    @Column(nullable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
-    protected User(){}
+    /**
+     * JPA requires a no-arg constructor.
+     */
+    protected User() {}
 
-    public User(UUID id, String tenantId, String email, String passwordHarsh, String fullName, String role) {
-        this.id = UUID.randomUUID();
-        this.tenantId = tenantId;
+    /**
+     * Creates a new User with the given details.
+     * The tenant ID is automatically assigned by BaseTenantEntity.assignTenant() on persist.
+     *
+     * @param email        User's email address
+     * @param passwordHash BCrypt-encoded password hash
+     * @param fullName     User's full name
+     * @param role         User's role (e.g., "ADMIN", "USER")
+     */
+    public User(String email, String passwordHash, String fullName, String role) {
         this.email = email;
-        this.passwordHarsh = passwordHarsh;
+        this.passwordHash = passwordHash;
         this.fullName = fullName;
         this.role = role;
         this.active = true;
         this.createdAt = Instant.now();
-
-
     }
 
-    public User(String tenantId, @Email(message = "Email type invalid") @NotBlank(message = "Email is required" ) String email, @Nullable String encode, @NotBlank(message = "Full Name is required") String passwordHarsh) {
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
+    // ==================== Getters ====================
 
     public UUID getId() {
         return id;
@@ -77,9 +86,16 @@ public class User extends BaseTenantEntity {
         return email;
     }
 
-    @Override
-    public String getTenantId() {
-        return tenantId;
+    public String getPasswordHash() {
+        return passwordHash;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public String getFullName() {
+        return fullName;
     }
 
     public boolean isActive() {
@@ -90,11 +106,25 @@ public class User extends BaseTenantEntity {
         return createdAt;
     }
 
-    public String getPasswordHarsh() {
-        return passwordHarsh;
+    // ==================== Setters (for updates) ====================
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public String getRole() {
-        return role;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
     }
 }
