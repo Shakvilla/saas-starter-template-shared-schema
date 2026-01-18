@@ -1,0 +1,52 @@
+-- -- =====================================================
+-- -- V7: Seed System Roles, Permissions, and Initial Admin
+-- -- =====================================================
+--
+-- -- Insert permissions
+-- INSERT INTO system_permissions (id, name, description) VALUES
+--     ('11111111-1111-1111-1111-111111111001', 'manage_tenants', 'Create, update, and delete tenants'),
+--     ('11111111-1111-1111-1111-111111111002', 'view_tenants', 'View tenant list and details'),
+--     ('11111111-1111-1111-1111-111111111003', 'manage_users', 'Manage users across all tenants'),
+--     ('11111111-1111-1111-1111-111111111004', 'view_users', 'View user data across all tenants'),
+--     ('11111111-1111-1111-1111-111111111005', 'manage_admins', 'Create, update, and delete system admins'),
+--     ('11111111-1111-1111-1111-111111111006', 'manage_billing', 'Manage platform billing and subscriptions'),
+--     ('11111111-1111-1111-1111-111111111007', 'view_analytics', 'View platform-wide analytics');
+--
+-- -- Insert roles
+-- INSERT INTO system_roles (id, name, description) VALUES
+--     ('22222222-2222-2222-2222-222222222001', 'SUPER_ADMIN', 'Full platform access - all permissions'),
+--     ('22222222-2222-2222-2222-222222222002', 'SUPPORT_ADMIN', 'User support - view tenants and users'),
+--     ('22222222-2222-2222-2222-222222222003', 'BILLING_ADMIN', 'Billing management - view tenants and manage billing');
+--
+-- -- Assign permissions to SUPER_ADMIN (all permissions)
+-- INSERT INTO system_role_permissions (role_id, permission_id) VALUES
+--     ('22222222-2222-2222-2222-222222222001', '11111111-1111-1111-1111-111111111001'),
+--     ('22222222-2222-2222-2222-222222222001', '11111111-1111-1111-1111-111111111002'),
+--     ('22222222-2222-2222-2222-222222222001', '11111111-1111-1111-1111-111111111003'),
+--     ('22222222-2222-2222-2222-222222222001', '11111111-1111-1111-1111-111111111004'),
+--     ('22222222-2222-2222-2222-222222222001', '11111111-1111-1111-1111-111111111005'),
+--     ('22222222-2222-2222-2222-222222222001', '11111111-1111-1111-1111-111111111006'),
+--     ('22222222-2222-2222-2222-222222222001', '11111111-1111-1111-1111-111111111007');
+--
+-- -- Assign permissions to SUPPORT_ADMIN
+-- INSERT INTO system_role_permissions (role_id, permission_id) VALUES
+--     ('22222222-2222-2222-2222-222222222002', '11111111-1111-1111-1111-111111111002'),
+--     ('22222222-2222-2222-2222-222222222002', '11111111-1111-1111-1111-111111111004');
+--
+-- -- Assign permissions to BILLING_ADMIN
+-- INSERT INTO system_role_permissions (role_id, permission_id) VALUES
+--     ('22222222-2222-2222-2222-222222222003', '11111111-1111-1111-1111-111111111002'),
+--     ('22222222-2222-2222-2222-222222222003', '11111111-1111-1111-1111-111111111006');
+--
+-- -- Insert initial SUPER_ADMIN user
+-- -- Password: Admin@123 (BCrypt hash with cost 10)
+-- INSERT INTO system_admins (id, email, password_hash, full_name, active) VALUES
+--     ('33333333-3333-3333-3333-333333333001',
+--      'superadmin@norgha.cloud',
+--      '$2a$10$EqKcp1WFKzP8xOkpKwRZ4uKLsXz/X.eH9K6mz1K1v3s1yMz5EjxAy',
+--      'Super Administrator',
+--      true);
+--
+-- -- Assign SUPER_ADMIN role to initial admin
+-- INSERT INTO system_admin_roles (admin_id, role_id) VALUES
+--     ('33333333-3333-3333-3333-333333333001', '22222222-2222-2222-2222-222222222001');

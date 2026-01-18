@@ -7,6 +7,8 @@ public final class TenantContext {
     private TenantContext(){}
 
     public static void setTenantId(String tenantId){
+
+
         CURRENT_TENANT.set(tenantId);
     }
 

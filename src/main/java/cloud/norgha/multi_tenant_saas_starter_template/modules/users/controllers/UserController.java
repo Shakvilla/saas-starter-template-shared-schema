@@ -3,6 +3,7 @@ package cloud.norgha.multi_tenant_saas_starter_template.modules.users.controller
 import cloud.norgha.multi_tenant_saas_starter_template.modules.users.dto.UpdateUserRequestDto;
 import cloud.norgha.multi_tenant_saas_starter_template.modules.users.dto.UserResponseDto;
 import cloud.norgha.multi_tenant_saas_starter_template.modules.users.services.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,7 +23,8 @@ import java.util.UUID;
  * All endpoints require authentication.
  */
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/v1/users")
+@Tag(name = "User Management", description = "Tenant-scoped user management endpoints")
 public class UserController {
 
     private final UserService userService;

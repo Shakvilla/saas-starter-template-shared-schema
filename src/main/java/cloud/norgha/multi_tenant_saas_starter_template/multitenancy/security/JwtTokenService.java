@@ -37,6 +37,24 @@ public class JwtTokenService {
 
     }
 
+    /**
+     * Generates a JWT token with roles and permissions.
+     * Used for system admins who have granular permissions.
+     */
+    public String generateTokenWithPermissions(String userId, String tenantId, List<String> roles, List<String> permissions) {
+        Instant now = Instant.now();
+
+        return Jwts.builder()
+                .subject(userId)
+                .claim("tenant", tenantId)
+                .claim("roles", roles)
+                .claim("permissions", permissions)
+                .issuedAt(Date.from(now))
+                .expiration(Date.from(now.plusSeconds(expirationSeconds)))
+                .signWith(secretKey, Jwts.SIG.HS256)
+                .compact();
+    }
+
     public Jws<Claims> parseAndValidate(String token){
         return Jwts.parser()
                 .verifyWith(secretKey)

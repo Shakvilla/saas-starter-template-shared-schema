@@ -4,6 +4,7 @@ import cloud.norgha.multi_tenant_saas_starter_template.modules.auth.dto.AuthResp
 import cloud.norgha.multi_tenant_saas_starter_template.modules.auth.dto.LoginRequestDto;
 import cloud.norgha.multi_tenant_saas_starter_template.modules.auth.dto.RegisterRequestDto;
 import cloud.norgha.multi_tenant_saas_starter_template.modules.auth.services.AuthService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
  * These endpoints are publicly accessible (no authentication required).
  */
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/v1/auth")
+@Tag(name = "Authentication Management", description = "This group of endpoints are used to manage authentication operations")
 public class AuthController {
 
     private final AuthService authService;
