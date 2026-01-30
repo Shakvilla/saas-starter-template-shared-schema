@@ -1,6 +1,5 @@
 package cloud.norgha.multi_tenant_saas_starter_template.infrastructure.exception;
 
-import cloud.norgha.multi_tenant_saas_starter_template.multitenancy.tenant.TenantMissingException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -65,6 +64,46 @@ public class GlobalExceptionHandler {
                 .body(ApiErrorResponse.of(
                         HttpStatus.BAD_REQUEST.value(),
                         "Bad Request",
+                        ex.getMessage(),
+                        request.getRequestURI()
+                ));
+    }
+
+    /**
+     * Handles tenant not found.
+     */
+    @ExceptionHandler(TenantNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleTenantNotFoundException(
+            TenantNotFoundException ex,
+            HttpServletRequest request
+    ) {
+        log.warn("Tenant not found: {}", ex.getMessage());
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(ApiErrorResponse.of(
+                        HttpStatus.NOT_FOUND.value(),
+                        "Not Found",
+                        ex.getMessage(),
+                        request.getRequestURI()
+                ));
+    }
+
+    /**
+     * Handles deactivated tenant.
+     */
+    @ExceptionHandler(TenantDeactivatedException.class)
+    public ResponseEntity<ApiErrorResponse> handleTenantDeactivatedException(
+            TenantDeactivatedException ex,
+            HttpServletRequest request
+    ) {
+        log.warn("Tenant deactivated: {}", ex.getMessage());
+
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(ApiErrorResponse.of(
+                        HttpStatus.FORBIDDEN.value(),
+                        "Forbidden",
                         ex.getMessage(),
                         request.getRequestURI()
                 ));

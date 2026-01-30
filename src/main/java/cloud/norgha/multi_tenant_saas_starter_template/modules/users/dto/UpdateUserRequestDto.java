@@ -8,6 +8,10 @@ import jakarta.validation.constraints.Email;
 public record UpdateUserRequestDto(
         String fullName,
 
+        String companyName,
+
         @Email(message = "Email format is invalid")
         String email
+
+
 ) {}

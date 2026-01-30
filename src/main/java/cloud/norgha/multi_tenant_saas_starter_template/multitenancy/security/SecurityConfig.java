@@ -3,9 +3,13 @@ package cloud.norgha.multi_tenant_saas_starter_template.multitenancy.security;
 import cloud.norgha.multi_tenant_saas_starter_template.multitenancy.persistence.HibernateTenantFilterConfigurer;
 import cloud.norgha.multi_tenant_saas_starter_template.multitenancy.tenant.TenantFilter;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -15,6 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -42,6 +47,10 @@ import io.swagger.v3.oas.models.servers.Server;
 @EnableMethodSecurity
 public class SecurityConfig {
 
+    private static final Logger log = LoggerFactory.getLogger(SecurityConfig.class);
+
+    private final Environment environment;
+
     @Value("${security.jwt.secret}")
     private String jwtSecret;
 
@@ -50,6 +59,30 @@ public class SecurityConfig {
 
     @Value("${app.swagger.server-url:http://localhost:8080}")
     private String swaggerServerUrl;
+
+    public SecurityConfig(Environment environment) {
+        this.environment = environment;
+    }
+
+    /**
+     * Validates JWT secret configuration on startup.
+     * Fails fast in production if using default/insecure secret.
+     */
+    @PostConstruct
+    public void validateJwtSecret() {
+        boolean isProd = Arrays.asList(environment.getActiveProfiles()).contains("prod");
+        
+        if (jwtSecret.startsWith("default") || jwtSecret.length() < 32) {
+            if (isProd) {
+                throw new IllegalStateException(
+                    "SECURITY ERROR: JWT_SECRET must be set to a secure value (min 32 chars) in production! " +
+                    "Set the JWT_SECRET environment variable."
+                );
+            } else {
+                log.warn("WARNING: Using default JWT secret. Set JWT_SECRET env var before deploying to production!");
+            }
+        }
+    }
 
     /**
      * Creates the JwtTokenService bean with properly derived SecretKey.
@@ -83,7 +116,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,
-            HibernateTenantFilterConfigurer filterConfigurer,
+            RateLimitingFilter rateLimitingFilter,
+            TenantFilter tenantFilter,
             JwtAuthenticationFilter jwtAuthenticationFilter,
             AdminJwtAuthenticationFilter adminJwtAuthenticationFilter
     ) throws Exception {
@@ -110,10 +144,15 @@ public class SecurityConfig {
                         // All other requests require authentication
                         .anyRequest().authenticated())
 
-                // TenantFilter for tenant-scoped requests (skips /admin/**)
+                // RateLimitingFilter for auth endpoints (first filter)
                 .addFilterBefore(
-                        new TenantFilter(filterConfigurer),
+                        rateLimitingFilter,
                         UsernamePasswordAuthenticationFilter.class)
+
+                // TenantFilter for tenant-scoped requests (skips /admin/**)
+                .addFilterAfter(
+                        tenantFilter,
+                        RateLimitingFilter.class)
 
                 // AdminJwtAuthenticationFilter for /admin/** requests
                 .addFilterAfter(
@@ -127,6 +166,7 @@ public class SecurityConfig {
 
         return http.build();
     }
+
 
 
     @Bean

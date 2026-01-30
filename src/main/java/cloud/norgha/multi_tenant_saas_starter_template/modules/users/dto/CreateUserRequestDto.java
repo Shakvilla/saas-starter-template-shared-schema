@@ -13,7 +13,10 @@ public record CreateUserRequestDto(
         String password,
 
         @NotBlank(message = "Full Name is required")
-        String fullName
+        String fullName,
+
+        @NotBlank(message = "Company Name is required")
+        String companyName
 
         ) {
 }

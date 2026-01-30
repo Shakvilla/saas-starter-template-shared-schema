@@ -44,6 +44,9 @@ public class UserServiceImpl implements UserService {
                 request.email(),
                 passwordEncoder.encode(request.password()),
                 request.fullName(),
+
+                request.companyName(),
+
                 "USER" // Default role for new users
         );
 
@@ -127,6 +130,7 @@ public class UserServiceImpl implements UserService {
                 user.getId(),
                 user.getEmail(),
                 user.getFullName(),
+                user.getCompanyName(),
                 user.isActive(),
                 user.getCreatedAt()
         );

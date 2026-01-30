@@ -2,7 +2,7 @@ package cloud.norgha.multi_tenant_saas_starter_template.multitenancy.persistence
 
 
 import cloud.norgha.multi_tenant_saas_starter_template.multitenancy.tenant.TenantContext;
-import cloud.norgha.multi_tenant_saas_starter_template.multitenancy.tenant.TenantMissingException;
+import cloud.norgha.multi_tenant_saas_starter_template.infrastructure.exception.TenantMissingException;
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.PrePersist;

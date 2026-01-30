@@ -9,6 +9,7 @@ import cloud.norgha.multi_tenant_saas_starter_template.modules.admin.services.Te
 import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +17,7 @@ import java.util.List;
 
 /**
  * Implementation of TenantService for tenant management.
+ * Evicts tenant cache when tenants are modified.
  */
 @Service
 @Transactional(readOnly = true)
@@ -63,6 +65,7 @@ public class TenantServiceImpl implements TenantService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "tenants", key = "#id")
     public TenantResponseDto updateTenant(String id, UpdateTenantRequestDto request) {
         log.debug("Updating tenant: {}", id);
 
@@ -77,13 +80,14 @@ public class TenantServiceImpl implements TenantService {
         }
 
         Tenant updated = tenantRepository.save(tenant);
-        log.info("Updated tenant: {}", id);
+        log.info("Updated tenant: {} (cache evicted)", id);
 
         return mapToResponse(updated);
     }
 
     @Override
     @Transactional
+    @CacheEvict(value = "tenants", key = "#id")
     public void deactivateTenant(String id) {
         log.debug("Deactivating tenant: {}", id);
 
@@ -92,7 +96,7 @@ public class TenantServiceImpl implements TenantService {
 
         tenant.setActive(false);
         tenantRepository.save(tenant);
-        log.info("Deactivated tenant: {}", id);
+        log.info("Deactivated tenant: {} (cache evicted)", id);
     }
 
     private TenantResponseDto mapToResponse(Tenant tenant) {

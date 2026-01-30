@@ -47,6 +47,10 @@ public class User extends BaseTenantEntity {
     @Column(name = "full_name", nullable = false)
     private String fullName;
 
+    @NotBlank(message = "Company name field is required")
+    @Column(nullable = false)
+    private String companyName;
+
     @Column(nullable = false)
     private boolean active;
 
@@ -63,14 +67,15 @@ public class User extends BaseTenantEntity {
      * The tenant ID is automatically assigned by BaseTenantEntity.assignTenant() on persist.
      *
      * @param email        User's email address
-     * @param passwordHash BCrypt-encoded password hash
+     * @param passwordHash Bcrypt-encoded password hash
      * @param fullName     User's full name
      * @param role         User's role (e.g., "ADMIN", "USER")
      */
-    public User(String email, String passwordHash, String fullName, String role) {
+    public User(String email, String passwordHash, String fullName, String companyName, String role) {
         this.email = email;
         this.passwordHash = passwordHash;
         this.fullName = fullName;
+        this.companyName = companyName;
         this.role = role;
         this.active = true;
         this.createdAt = Instant.now();
@@ -81,6 +86,12 @@ public class User extends BaseTenantEntity {
     public UUID getId() {
         return id;
     }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+
 
     public String getEmail() {
         return email;
@@ -126,5 +137,9 @@ public class User extends BaseTenantEntity {
 
     public void setPasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 }

@@ -8,7 +8,10 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
 import org.hibernate.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +30,8 @@ import java.util.UUID;
 @Tag(name = "Cross-Tenant User Management", description = "Platform-level user lookups across tenants")
 public class UserAdminController {
 
+    private static final Logger log = LoggerFactory.getLogger(UserAdminController.class);
+
     private final UserRepository userRepository;
 
     @PersistenceContext
@@ -43,6 +48,9 @@ public class UserAdminController {
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('view_users')")
     public UserResponseDto getUserById(@PathVariable UUID id) {
+        String adminId = SecurityContextHolder.getContext().getAuthentication().getName();
+        log.info("AUDIT: Admin {} accessing user {} (cross-tenant)", adminId, id);
+
         Session session = entityManager.unwrap(Session.class);
 
         // Disable tenant filter for cross-tenant access
@@ -51,10 +59,13 @@ public class UserAdminController {
         try {
             User user = userRepository.findById(id)
                     .orElseThrow(() -> new EntityNotFoundException("User not found: " + id));
+            
+            log.info("AUDIT: Admin {} successfully retrieved user {} from tenant {}", 
+                    adminId, id, user.getTenantId());
+            
             return mapToResponse(user);
         } finally {
-            // Re-enable filter (though it will be re-enabled on next request anyway)
-            // This is defensive programming
+            // Filter will be re-enabled on next request via TenantFilter
         }
     }
 
@@ -65,6 +76,9 @@ public class UserAdminController {
     @GetMapping("/tenant/{tenantId}")
     @PreAuthorize("hasAuthority('view_users')")
     public List<UserResponseDto> getUsersByTenant(@PathVariable String tenantId) {
+        String adminId = SecurityContextHolder.getContext().getAuthentication().getName();
+        log.info("AUDIT: Admin {} listing users for tenant {} (cross-tenant)", adminId, tenantId);
+
         Session session = entityManager.unwrap(Session.class);
 
         // Disable the automatic filter and manually query by tenant
@@ -77,11 +91,14 @@ public class UserAdminController {
                     .setParameter("tenantId", tenantId)
                     .getResultList();
 
+            log.info("AUDIT: Admin {} retrieved {} users from tenant {}", 
+                    adminId, users.size(), tenantId);
+
             return users.stream()
                     .map(this::mapToResponse)
                     .toList();
         } finally {
-            // Filter will be re-enabled on next request
+            // Filter will be re-enabled on next request via TenantFilter
         }
     }
 
@@ -90,6 +107,7 @@ public class UserAdminController {
                 user.getId(),
                 user.getEmail(),
                 user.getFullName(),
+                user.getCompanyName(),
                 user.isActive(),
                 user.getCreatedAt()
         );

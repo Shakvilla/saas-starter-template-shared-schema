@@ -17,5 +17,8 @@ public record RegisterRequestDto(
         String password,
 
         @NotBlank(message = "Full name is required")
-        String fullName
+        String fullName,
+
+        @NotBlank(message = "Company name is required")
+        String companyName
 ) {}
