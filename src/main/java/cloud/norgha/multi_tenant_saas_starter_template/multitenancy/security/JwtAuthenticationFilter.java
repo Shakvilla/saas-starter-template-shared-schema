@@ -65,8 +65,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 return;
             }
 
-            // Validate tenant matches
-            if (!tokenTenant.equals(requestTenant)) {
+            // Validate tenant matches (case-insensitive since TenantResolver normalizes to lowercase)
+            if (!tokenTenant.equalsIgnoreCase(requestTenant)) {
                 log.warn("Tenant mismatch: token={}, request={}", tokenTenant, requestTenant);
                 response.sendError(HttpServletResponse.SC_FORBIDDEN, "Tenant mismatch between token and request");
                 return;
