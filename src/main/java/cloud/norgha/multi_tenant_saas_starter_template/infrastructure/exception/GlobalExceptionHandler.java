@@ -70,6 +70,26 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * Handles invalid tenant ID format.
+     */
+    @ExceptionHandler(TenantInvalidException.class)
+    public ResponseEntity<ApiErrorResponse> handleTenantInvalidException(
+            TenantInvalidException ex,
+            HttpServletRequest request
+    ) {
+        log.warn("Tenant invalid: {}", ex.getMessage());
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ApiErrorResponse.of(
+                        HttpStatus.BAD_REQUEST.value(),
+                        "Bad Request",
+                        ex.getMessage(),
+                        request.getRequestURI()
+                ));
+    }
+
+    /**
      * Handles tenant not found.
      */
     @ExceptionHandler(TenantNotFoundException.class)

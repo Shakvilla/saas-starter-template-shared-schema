@@ -35,4 +35,19 @@ public final class TenantContext {
     public static void clear() {
         CURRENT_TENANT.remove();
     }
+
+    /**
+     * Gets the current tenant ID, throwing if not set.
+     * Use this when tenant context is required.
+     *
+     * @return The current tenant ID (never null)
+     * @throws IllegalStateException if tenant context is not set
+     */
+    public static String requireTenantId() {
+        String tenantId = CURRENT_TENANT.get();
+        if (tenantId == null) {
+            throw new IllegalStateException("Tenant context not set - ensure TenantFilter has processed this request");
+        }
+        return tenantId;
+    }
 }

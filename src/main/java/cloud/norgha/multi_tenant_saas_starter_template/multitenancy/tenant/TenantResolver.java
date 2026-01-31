@@ -1,6 +1,7 @@
 package cloud.norgha.multi_tenant_saas_starter_template.multitenancy.tenant;
 
 import cloud.norgha.multi_tenant_saas_starter_template.infrastructure.exception.TenantDeactivatedException;
+import cloud.norgha.multi_tenant_saas_starter_template.infrastructure.exception.TenantInvalidException;
 import cloud.norgha.multi_tenant_saas_starter_template.infrastructure.exception.TenantMissingException;
 import cloud.norgha.multi_tenant_saas_starter_template.infrastructure.exception.TenantNotFoundException;
 import cloud.norgha.multi_tenant_saas_starter_template.modules.admin.entity.Tenant;
@@ -34,6 +35,7 @@ public class TenantResolver {
      * @param request The HTTP request containing the X-Tenant-ID header
      * @return The validated tenant ID
      * @throws TenantMissingException if the header is missing or blank
+     * @throws TenantInvalidException if the tenant ID contains invalid characters
      * @throws TenantNotFoundException if the tenant does not exist
      * @throws TenantDeactivatedException if the tenant is deactivated
      */
@@ -44,11 +46,9 @@ public class TenantResolver {
             throw new TenantMissingException("Missing X-Tenant-ID header");
         }
 
-//        sanitize tenant id input.
+        // Sanitize tenant ID input - only allow alphanumeric, hyphens and underscores
         if (!tenantId.matches("^[a-zA-Z0-9-_]+$")) {
-            throw new RuntimeException(
-                    "Tenant ID contains invalid characters"
-            );
+            throw new TenantInvalidException(tenantId);
         }
 
         // Validate tenant using cached lookup
