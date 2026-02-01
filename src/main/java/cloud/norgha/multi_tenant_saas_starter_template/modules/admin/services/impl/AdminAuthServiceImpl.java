@@ -56,7 +56,7 @@ public class AdminAuthServiceImpl implements AdminAuthService {
             throw new BadCredentialsException("Invalid password");
         }
 
-        log.info("login password: {}", request.password());
+        // Password logging removed for security - never log credentials
 
         // Get roles from database
         Set<String> roleNames = admin.getRoleNames();

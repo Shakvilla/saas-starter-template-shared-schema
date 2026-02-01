@@ -1,8 +1,8 @@
 package cloud.norgha.multi_tenant_saas_starter_template.modules.auth.dto;
 
+import cloud.norgha.multi_tenant_saas_starter_template.infrastructure.validation.StrongPassword;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 
 /**
  * Request DTO for user registration.
@@ -13,7 +13,7 @@ public record RegisterRequestDto(
         String email,
 
         @NotBlank(message = "Password is required")
-        @Size(min = 8, message = "Password must be at least 8 characters")
+        @StrongPassword
         String password,
 
         @NotBlank(message = "Full name is required")
@@ -22,3 +22,4 @@ public record RegisterRequestDto(
         @NotBlank(message = "Company name is required")
         String companyName
 ) {}
+

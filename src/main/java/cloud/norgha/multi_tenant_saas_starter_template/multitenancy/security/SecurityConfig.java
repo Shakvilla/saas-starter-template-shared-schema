@@ -119,9 +119,13 @@ public class SecurityConfig {
             RateLimitingFilter rateLimitingFilter,
             TenantFilter tenantFilter,
             JwtAuthenticationFilter jwtAuthenticationFilter,
-            AdminJwtAuthenticationFilter adminJwtAuthenticationFilter
+            AdminJwtAuthenticationFilter adminJwtAuthenticationFilter,
+            org.springframework.web.cors.CorsConfigurationSource corsConfigurationSource
     ) throws Exception {
         http
+                // Enable CORS with custom configuration
+                .cors(cors -> cors.configurationSource(corsConfigurationSource))
+
                 // Disable CSRF - not needed for stateless JWT auth
                 .csrf(AbstractHttpConfigurer::disable)
 

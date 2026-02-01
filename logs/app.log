@@ -1,5 +1,51 @@
-2026-01-31 04:18:50.276  INFO 16741 --- [multi-tenant-saas-starter-template] [SpringApplicationShutdownHook] o.s.boot.tomcat.GracefulShutdown         : Commencing graceful shutdown. Waiting for active requests to complete
-2026-01-31 04:18:50.291  INFO 16741 --- [multi-tenant-saas-starter-template] [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown         : Graceful shutdown complete
-2026-01-31 04:18:50.302  INFO 16741 --- [multi-tenant-saas-starter-template] [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
-2026-01-31 04:18:50.305  INFO 16741 --- [multi-tenant-saas-starter-template] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : SaaS-HikariCP - Shutdown initiated...
-2026-01-31 04:18:50.306  INFO 16741 --- [multi-tenant-saas-starter-template] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : SaaS-HikariCP - Shutdown completed.
+2026-02-01 02:07:47.974  INFO 25858 --- [multi-tenant-saas-starter-template] [main] ultiTenantSaasStarterTemplateApplication : Starting MultiTenantSaasStarterTemplateApplication using Java 25.0.1 with PID 25858 (/Users/mac/Desktop/Personal Java Template/multi-tenant-saas-starter-template/target/classes started by mac in /Users/mac/Desktop/Personal Java Template/multi-tenant-saas-starter-template)
+2026-02-01 02:07:47.980  INFO 25858 --- [multi-tenant-saas-starter-template] [main] ultiTenantSaasStarterTemplateApplication : No active profile set, falling back to 1 default profile: "default"
+2026-02-01 02:07:49.066  INFO 25858 --- [multi-tenant-saas-starter-template] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-02-01 02:07:49.147  INFO 25858 --- [multi-tenant-saas-starter-template] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 70 ms. Found 5 JPA repository interfaces.
+2026-02-01 02:07:49.849  INFO 25858 --- [multi-tenant-saas-starter-template] [main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-02-01 02:07:49.864  INFO 25858 --- [multi-tenant-saas-starter-template] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-02-01 02:07:49.864  INFO 25858 --- [multi-tenant-saas-starter-template] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.15]
+2026-02-01 02:07:49.913  INFO 25858 --- [multi-tenant-saas-starter-template] [main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1885 ms
+2026-02-01 02:07:50.243  INFO 25858 --- [multi-tenant-saas-starter-template] [main] com.zaxxer.hikari.HikariDataSource       : SaaS-HikariCP - Starting...
+2026-02-01 02:07:50.516  INFO 25858 --- [multi-tenant-saas-starter-template] [main] com.zaxxer.hikari.pool.HikariPool        : SaaS-HikariCP - Added connection org.postgresql.jdbc.PgConnection@1fb71788
+2026-02-01 02:07:50.518  INFO 25858 --- [multi-tenant-saas-starter-template] [main] com.zaxxer.hikari.HikariDataSource       : SaaS-HikariCP - Start completed.
+2026-02-01 02:07:50.562  INFO 25858 --- [multi-tenant-saas-starter-template] [main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://localhost:5432/saas_db (PostgreSQL 17.3)
+2026-02-01 02:07:50.701  INFO 25858 --- [multi-tenant-saas-starter-template] [main] o.f.core.internal.command.DbValidate     : Successfully validated 9 migrations (execution time 00:00.062s)
+2026-02-01 02:07:50.736  INFO 25858 --- [multi-tenant-saas-starter-template] [main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": 8
+2026-02-01 02:07:50.753  INFO 25858 --- [multi-tenant-saas-starter-template] [main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "9 - add unique email tenant constraint"
+2026-02-01 02:07:50.832  INFO 25858 --- [multi-tenant-saas-starter-template] [main] o.f.core.internal.command.DbMigrate      : Successfully applied 1 migration to schema "public", now at version v9 (execution time 00:00.050s)
+2026-02-01 02:07:50.936  INFO 25858 --- [multi-tenant-saas-starter-template] [main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-02-01 02:07:50.999  INFO 25858 --- [multi-tenant-saas-starter-template] [main] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.2.0.Final
+2026-02-01 02:07:51.493  INFO 25858 --- [multi-tenant-saas-starter-template] [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-02-01 02:07:51.552  WARN 25858 --- [multi-tenant-saas-starter-template] [main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-02-01 02:07:51.646  INFO 25858 --- [multi-tenant-saas-starter-template] [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/saas_db]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 17.3
+	Default catalog/schema: saas_db/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-02-01 02:07:52.765  INFO 25858 --- [multi-tenant-saas-starter-template] [main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-02-01 02:07:52.842  INFO 25858 --- [multi-tenant-saas-starter-template] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-02-01 02:07:52.955  INFO 25858 --- [multi-tenant-saas-starter-template] [main] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-02-01 02:07:53.180  WARN 25858 --- [multi-tenant-saas-starter-template] [main] c.n.m.m.security.SecurityConfig          : WARNING: Using default JWT secret. Set JWT_SECRET env var before deploying to production!
+2026-02-01 02:07:53.835  WARN 25858 --- [multi-tenant-saas-starter-template] [main] .s.a.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 1f8e7d12-5327-4237-9046-0914484e54e0
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-02-01 02:07:53.845  INFO 25858 --- [multi-tenant-saas-starter-template] [main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-02-01 02:07:54.680  INFO 25858 --- [multi-tenant-saas-starter-template] [main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-02-01 02:07:54.689  INFO 25858 --- [multi-tenant-saas-starter-template] [main] ultiTenantSaasStarterTemplateApplication : Started MultiTenantSaasStarterTemplateApplication in 7.269 seconds (process running for 8.171)
+2026-02-01 02:07:54.692  WARN 25858 --- [multi-tenant-saas-starter-template] [main] o.s.core.events.SpringDocAppInitializer  : SpringDoc /v3/api-docs endpoint is enabled by default. To disable it in production, set the property 'springdoc.api-docs.enabled=false'
+2026-02-01 02:07:54.692  WARN 25858 --- [multi-tenant-saas-starter-template] [main] o.s.core.events.SpringDocAppInitializer  : SpringDoc /swagger-ui.html endpoint is enabled by default. To disable it in production, set the property 'springdoc.swagger-ui.enabled=false'
+2026-02-01 02:08:17.858  INFO 25858 --- [multi-tenant-saas-starter-template] [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-02-01 02:08:17.859  INFO 25858 --- [multi-tenant-saas-starter-template] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-02-01 02:08:17.861  INFO 25858 --- [multi-tenant-saas-starter-template] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2026-02-01 02:08:18.687  INFO 25858 --- [multi-tenant-saas-starter-template] [http-nio-8080-exec-9] o.springdoc.api.AbstractOpenApiResource  : Init duration for springdoc-openapi is: 392 ms
