@@ -32,7 +32,11 @@ public class CorsConfig {
     private long maxAge;
 
     /**
-     * Configures CORS for all API endpoints.
+     * Provide a CorsConfigurationSource that applies the configured CORS rules to API endpoints.
+     *
+     * @return a CorsConfigurationSource that registers CORS settings (including allowed origins, methods,
+     *         headers, credentials flag, max age, and exposed headers "Authorization" and "X-Tenant-ID")
+     *         for the path pattern "/api/**"
      */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {

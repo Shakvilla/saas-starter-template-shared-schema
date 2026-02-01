@@ -79,6 +79,14 @@ public class RateLimitingFilter extends OncePerRequestFilter {
         return entry.count.get() > MAX_REQUESTS_PER_MINUTE;
     }
 
+    /**
+     * Extracts the client's IP address from the HTTP request.
+     *
+     * Prefers the first entry in the `X-Forwarded-For` header when present; otherwise uses the request's remote address.
+     *
+     * @param request the incoming HTTP servlet request
+     * @return the client's IP address (first `X-Forwarded-For` value if available, otherwise `request.getRemoteAddr()`)
+     */
     private String getClientIp(HttpServletRequest request) {
         String xForwardedFor = request.getHeader("X-Forwarded-For");
         if (xForwardedFor != null && !xForwardedFor.isEmpty()) {
@@ -88,8 +96,10 @@ public class RateLimitingFilter extends OncePerRequestFilter {
     }
 
     /**
-     * Scheduled cleanup of stale rate limit entries.
-     * Runs every 5 minutes to prevent memory leaks from old entries.
+     * Removes stale per-IP rate limit entries to prevent memory growth.
+     *
+     * Runs every 5 minutes and deletes entries whose window start is older than twice the configured window size.
+     * Logs the number of removed entries when any are cleaned up.
      */
     @Scheduled(fixedRate = 300_000) // 5 minutes
     public void cleanupStaleEntries() {
@@ -109,10 +119,15 @@ public class RateLimitingFilter extends OncePerRequestFilter {
         final long windowStart;
         final AtomicInteger count;
 
+        /**
+         * Create a rate-limit entry for a client IP with the specified window start and request count.
+         *
+         * @param windowStart the start timestamp of the current rate-limit window, in milliseconds since the epoch
+         * @param count an AtomicInteger tracking the number of requests observed in the current window
+         */
         RateLimitEntry(long windowStart, AtomicInteger count) {
             this.windowStart = windowStart;
             this.count = count;
         }
     }
 }
-
