@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -18,6 +19,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * Rate limiting filter for authentication endpoints.
  * Limits requests to prevent brute force attacks.
+ * Includes scheduled cleanup to prevent memory leaks.
  */
 @Component
 public class RateLimitingFilter extends OncePerRequestFilter {
@@ -85,6 +87,24 @@ public class RateLimitingFilter extends OncePerRequestFilter {
         return request.getRemoteAddr();
     }
 
+    /**
+     * Scheduled cleanup of stale rate limit entries.
+     * Runs every 5 minutes to prevent memory leaks from old entries.
+     */
+    @Scheduled(fixedRate = 300_000) // 5 minutes
+    public void cleanupStaleEntries() {
+        long now = System.currentTimeMillis();
+        int beforeSize = requestCounts.size();
+        
+        requestCounts.entrySet().removeIf(entry -> 
+            now - entry.getValue().windowStart > WINDOW_SIZE_MS * 2);
+        
+        int removed = beforeSize - requestCounts.size();
+        if (removed > 0) {
+            log.debug("Cleaned up {} stale rate limit entries", removed);
+        }
+    }
+
     private static class RateLimitEntry {
         final long windowStart;
         final AtomicInteger count;
@@ -95,3 +115,4 @@ public class RateLimitingFilter extends OncePerRequestFilter {
         }
     }
 }
+
