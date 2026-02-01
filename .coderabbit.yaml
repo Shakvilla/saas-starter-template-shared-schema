@@ -14,6 +14,7 @@ reviews:
     drafts: false
     base_branches:
       - main
+      - master
       - develop
   path_instructions:
     - path: "src/main/java/**/*.java"
