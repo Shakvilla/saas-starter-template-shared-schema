@@ -111,8 +111,18 @@ public class SecurityConfig {
     }
 
     /**
-     * Configures the security filter chain.
-     */
+         * Configure the security filter chain with CORS, stateless session management, authorization rules,
+         * and the specific filter ordering for rate limiting, tenant resolution, and JWT authentication.
+         *
+         * @param http the HttpSecurity builder to configure
+         * @param rateLimitingFilter filter that enforces rate limits (applied before authentication)
+         * @param tenantFilter filter that resolves tenant context for non-admin requests
+         * @param jwtAuthenticationFilter authentication filter for tenant-scoped JWTs
+         * @param adminJwtAuthenticationFilter authentication filter for admin JWTs (/admin/**)
+         * @param corsConfigurationSource CORS configuration source to enable cross-origin requests
+         * @return the configured SecurityFilterChain
+         * @throws Exception if building the security filter chain fails
+         */
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,

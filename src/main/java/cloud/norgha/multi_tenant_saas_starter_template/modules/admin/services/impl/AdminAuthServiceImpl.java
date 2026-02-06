@@ -40,6 +40,13 @@ public class AdminAuthServiceImpl implements AdminAuthService {
         this.jwtTokenService = jwtTokenService;
     }
 
+    /**
+     * Authenticates a system administrator using email and password and returns an authentication response containing a JWT.
+     *
+     * @param request the login request containing the administrator's email and password
+     * @return an AuthResponseDto containing the generated JWT and its expiration (in seconds)
+     * @throws BadCredentialsException if the email is not found, the account is deactivated, or the password is invalid
+     */
     @Override
     @Transactional(readOnly = true)
     public AuthResponseDto login(AdminLoginRequestDto request) {

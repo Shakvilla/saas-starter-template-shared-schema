@@ -14,6 +14,16 @@ public class PasswordValidator implements ConstraintValidator<StrongPassword, St
     private static final String DIGIT_PATTERN = ".*[0-9].*";
     private static final String SPECIAL_CHAR_PATTERN = ".*[!@#$%^&*(),.?\":{}|<>].*";
 
+    /**
+     * Validate that a password meets the configured strength requirements.
+     *
+     * When a requirement is not met, adds a custom constraint violation message to the provided
+     * ConstraintValidatorContext describing the specific failure.
+     *
+     * @param password the password to validate
+     * @param context the validation context used to record a custom constraint violation message
+     * @return `true` if the password satisfies all strength requirements, `false` otherwise
+     */
     @Override
     public boolean isValid(String password, ConstraintValidatorContext context) {
         if (password == null || password.isBlank()) {
@@ -48,6 +58,12 @@ public class PasswordValidator implements ConstraintValidator<StrongPassword, St
         return true;
     }
 
+    /**
+     * Disable the default constraint violation and add a single custom violation message to the provided validation context.
+     *
+     * @param context the validation context to modify
+     * @param message the custom constraint violation message to attach
+     */
     private void setCustomMessage(ConstraintValidatorContext context, String message) {
         context.disableDefaultConstraintViolation();
         context.buildConstraintViolationWithTemplate(message).addConstraintViolation();
