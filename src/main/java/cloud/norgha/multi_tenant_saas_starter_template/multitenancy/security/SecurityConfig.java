@@ -133,6 +133,12 @@ public class SecurityConfig {
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
+                // Disable HTTP Basic authentication (we use JWT)
+                .httpBasic(AbstractHttpConfigurer::disable)
+
+                // Disable form login (we use JWT)
+                .formLogin(AbstractHttpConfigurer::disable)
+
                 // Authorization rules
                 .authorizeHttpRequests(auth -> auth
                         // Public endpoints

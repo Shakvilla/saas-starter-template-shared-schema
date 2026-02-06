@@ -31,11 +31,12 @@ public class TenantFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        // Skip tenant resolution for admin and swagger paths
+        // Skip tenant resolution for admin, swagger, and actuator paths
         String path = request.getRequestURI();
         return path.startsWith("/api/v1/admin/") 
                 || path.startsWith("/swagger-ui")
-                || path.startsWith("/v3/api-docs");
+                || path.startsWith("/v3/api-docs")
+                || path.startsWith("/actuator");
     }
 
     @Override
@@ -46,12 +47,16 @@ public class TenantFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
 
         try {
+
             String tenantId = tenantResolver.resolveTenant(request);
+
             TenantContext.setTenantId(tenantId);
             filterConfigurer.enableTenantFilter();
             log.debug("Tenant context set: {}", tenantId);
             filterChain.doFilter(request, response);
+
         } finally {
+
             filterConfigurer.disableTenantFilter();
             TenantContext.clear();
         }
