@@ -29,6 +29,7 @@ public class TenantResolver {
         this.tenantRepository = tenantRepository;
     }
 
+
     /**
      * Resolves and validates the tenant from the request header.
      *
@@ -57,6 +58,7 @@ public class TenantResolver {
         return tenantId.toLowerCase();
     }
 
+
     /**
      * Validates that a tenant exists and is active.
      * Results are cached to avoid repeated database lookups.
@@ -68,9 +70,10 @@ public class TenantResolver {
     @Cacheable(value = "tenants", key = "#tenantId")
     public Tenant validateTenant(String tenantId) {
         log.debug("Validating tenant (cache miss): {}", tenantId);
-        
+
         Tenant tenant = tenantRepository.findById(tenantId)
                 .orElseThrow(() -> new TenantNotFoundException(tenantId));
+
 
         if (!tenant.isActive()) {
             throw new TenantDeactivatedException(tenantId);

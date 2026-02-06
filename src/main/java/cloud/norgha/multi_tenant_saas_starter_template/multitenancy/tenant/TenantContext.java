@@ -28,6 +28,7 @@ public final class TenantContext {
         return CURRENT_TENANT.get();
     }
 
+
     /**
      * Clears the current tenant context.
      * Should be called in a finally block after request processing.
@@ -35,6 +36,7 @@ public final class TenantContext {
     public static void clear() {
         CURRENT_TENANT.remove();
     }
+
 
     /**
      * Gets the current tenant ID, throwing if not set.
@@ -50,4 +52,7 @@ public final class TenantContext {
         }
         return tenantId;
     }
+
+
+
 }

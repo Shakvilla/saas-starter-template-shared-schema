@@ -47,12 +47,16 @@ public class TenantFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
 
         try {
+
             String tenantId = tenantResolver.resolveTenant(request);
+
             TenantContext.setTenantId(tenantId);
             filterConfigurer.enableTenantFilter();
             log.debug("Tenant context set: {}", tenantId);
             filterChain.doFilter(request, response);
+
         } finally {
+
             filterConfigurer.disableTenantFilter();
             TenantContext.clear();
         }
